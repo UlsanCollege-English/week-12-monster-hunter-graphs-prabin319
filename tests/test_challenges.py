@@ -81,10 +81,20 @@ def test_build_weighted_hunter_map_keeps_lowest_duplicate_weight():
     assert graph["Train Station"]["Old Theater"] == 4
 
 
-@pytest.mark.parametrize("bad_weight", [0, -1, -10])
-def test_build_weighted_hunter_map_rejects_non_positive_weights(bad_weight):
-    edges = [("Old Theater", "Train Station", bad_weight)]
+def test_build_weighted_hunter_map_rejects_zero_weight():
+    edges = [("Old Theater", "Train Station", 0)]
+    with pytest.raises(ValueError):
+        build_weighted_hunter_map(edges)
 
+
+def test_build_weighted_hunter_map_rejects_negative_weight():
+    edges = [("Old Theater", "Train Station", -1)]
+    with pytest.raises(ValueError):
+        build_weighted_hunter_map(edges)
+
+
+def test_build_weighted_hunter_map_rejects_large_negative_weight():
+    edges = [("Old Theater", "Train Station", -10)]
     with pytest.raises(ValueError):
         build_weighted_hunter_map(edges)
 
